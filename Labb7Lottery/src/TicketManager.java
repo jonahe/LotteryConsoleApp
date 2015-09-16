@@ -18,7 +18,6 @@ public class TicketManager {
 		this.winningRow = new ArrayList<Integer>();
 		// random winning row
 		generateWinningRow();
-		System.out.println(winningRow);
 	}
 	
 	public int getHIGHEST_ALLOWED_ROW_NUMBER(){
@@ -113,6 +112,13 @@ public class TicketManager {
 		return null;
 	}
 	
+	/**
+	 * Collects all rows from all tickets into one ArrayList
+	 * <p>
+	 * Useful when we want to sort ALL rows in order of how many points they got, ignoring who the owner of the row is
+	 * @return
+	 */
+	
 	private ArrayList<TicketRow> getAllTicketRows(){
 		ArrayList<TicketRow> allTicketRows = new ArrayList<TicketRow>();
 		// get the rows from all of the tickets and put it into one list
@@ -122,7 +128,7 @@ public class TicketManager {
 		return allTicketRows;
 	}
 	
-//  // Below is my own naive sort
+//  // Below is my own naive - inefficient and slow - sorting function
 	
 //	/**
 //	 * Returns a sorted array of either all ticket rows, or just the rows of the current ticket
@@ -171,9 +177,9 @@ public class TicketManager {
 		}
 		
 		
-		// before we can sort we must call the count points method, else all point values will be 0
+		// before we can sort we must make all rows count points and see if they are winning or not
 		for(TicketRow row : ticketRows){
-			row.countCorrectNumbers(winningRow);
+			row.prepareForSort(winningRow);
 		}
 		
 		// sort it using the implemented Comparable interface
@@ -188,9 +194,9 @@ public class TicketManager {
 	 * For alignment of Strings where some words may be of different length
 	 * <p>
 	 * Example problem:	Sven : 2 points;
-	 * 					Gurkmacka : 2 points  <--- not aligned vertically
-	 * Wanted result:	Sven		: 2 points
-	 * 					Gurkmacka	: 2 points
+	 * 					Gurkmacka : 2 points  <--- not aligned vertically because different word lengths
+	 * Wanted result:	Sven	  	: 2 points  
+	 * 					Gurkmacka 	: 2 points  <-- fewer spaces added here, to compensate for longer word
 	 * </p>
 	 * @param wordWithVariableLenght
 	 * @return
@@ -199,6 +205,9 @@ public class TicketManager {
 		
 		StringBuilder sb = new StringBuilder(wordWithVariableLenght);
 		int wordLength = wordWithVariableLenght.length();
+		// getLengthOfLongestName() is specific to how I use this function in getFormattedResults
+		// in a more general version the space buffer would be fixed at a number slightly
+		// larger than the expected highest length of a word
 		int spaceBuffer = getLengthOfLongestName() + 1; 
 		// for example: if a string is 5 length, then to that string, we will add 20-5 spaces
 		for(int i = 0; i < spaceBuffer - wordLength; i++){
@@ -245,6 +254,13 @@ public class TicketManager {
 		return formattedResults;
 	}
 	
+	
+	/**
+	 * Get the .length() value from the longest String among ticket owner names.
+	 * <p>
+	 * Used together with getFormattedResults() to ensure the "spaceBuffer" is not longer than needed.
+	 * @return
+	 */
 	private int getLengthOfLongestName(){
 		int length = 0;
 		for(LotteryTicket ticket : tickets){

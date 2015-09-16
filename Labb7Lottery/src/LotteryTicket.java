@@ -8,7 +8,6 @@ public class LotteryTicket {
 	public LotteryTicket(String name) {
 		this.rows = new ArrayList<TicketRow>();
 		this.name = name;
-		
 	}
 	
 	public void addRow(TicketRow row){

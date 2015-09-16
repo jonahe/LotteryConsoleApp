@@ -36,9 +36,16 @@ public class LotteryMenu {
 			choice = askForAndGetNextInt(mainMessage, 1, 2, 3, 4, QUIT_Int);
 			if(choice == createNewTicket){
 				createNewTicketMenu();
-			} else if(choice == chooseExistingTicket) {
-				chooseTicketToWorkWith();
-			} else if(choice == checkAllForWinning){
+			}
+			else if(choice == chooseExistingTicket) {
+				if(ticketManager.getTickets().size() == 0){
+					System.out.println("There are no tickets to work with yet.");
+					continue;
+				} else {
+					chooseTicketToWorkWith();					
+				}
+			} 
+			else if(choice == checkAllForWinning){
 				if(ticketManager.getTickets().size() == 0){
 					System.out.println("There are no tickets to check! Create at least one first!");
 				} else {
@@ -46,7 +53,8 @@ public class LotteryMenu {
 					System.out.println(ticketManager.getFormattedResults(forAllTickets));
 					System.out.println("If results are too big for console, check project folder lotteryResults.txt");
 				}
-			} else if(choice == generateNewWinningRow){
+			} 
+			else if(choice == generateNewWinningRow){
 				ticketManager.generateWinningRow();
 				System.out.println("New winning row generated!");
 			}
@@ -57,6 +65,7 @@ public class LotteryMenu {
 	private void createNewTicketMenu(){
 		String message = "Enter your name";
 		String ticketOwner = askForAndGetNextString(message);
+		// NOTE: this also sets the created ticket as the current one
 		ticketManager.createTicket(ticketOwner);
 		System.out.println("Ticket created for owner " + ticketOwner);
 		// go on to adding rows
@@ -191,14 +200,14 @@ public class LotteryMenu {
 	 * Ask user for input, and keep asking until s/he chooses one of the valid options
 	 * 
 	 * @param askMessage
-	 * @param validOptions "varargs", meaning "a","b","c" would be ok, as well as 0 args, and String[] as arg
+	 * @param validOptions "Varargs", meaning "a","b","c" would be ok, as well as 0 args, and String[] as arg
 	 * @return one of the valid options, or anything, if no validOptions was provided
 	 */
 	
 	private String askForAndGetNextString(String askMessage, String... validOptions){
 		String input = "";
 		do{
-			System.out.print(askMessage + ": ");
+			System.out.print(askMessage + "\n: ");
 			input = strScanner.nextLine();
 			// if it's not one of the valid options, repeat the message - start over
 			
@@ -207,6 +216,7 @@ public class LotteryMenu {
 				break;
 			}
 			
+			// NOTE: the use of the generic "contains" method means input will be case sensitive
 			if(!contains(validOptions, input)){
 				System.out.println("That's not a valid option..");
 				continue;
@@ -230,7 +240,7 @@ public class LotteryMenu {
 	private int askForAndGetNextInt(String askMessage, Integer... validOptions){
 		int input = 99;
 		do{
-			System.out.print(askMessage + ": ");
+			System.out.print(askMessage + "\n: ");
 			// check if we really have an int waiting.
 			if(intScanner.hasNextInt()){
 				input = intScanner.nextInt();
@@ -260,6 +270,8 @@ public class LotteryMenu {
 	
 	/**
 	 * Generic method, mimicking contains() method for Lists, for arrays
+	 * <p>
+	 * NOTE that if used on strings, this will be case sensitive
 	 * @param array
 	 * @param needle
 	 * @return

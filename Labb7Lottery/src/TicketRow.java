@@ -16,6 +16,20 @@ public class TicketRow implements Comparable<TicketRow>{
 	
 	//TODO: clean up.   make way to check if the row has been checked?
 	
+	/**
+	 * Makes row ready for presenting : update how many points the row gives and mark if it's a winner
+	 * <p>
+	 * Really the same as countCorrectNumbers(), but returns nothing.
+	 * Before this, or countCorrectNumbers(), is called, it's NOT safe to assume isWinner() and getPoints() 
+	 * will return correct results
+	 * <p>
+	 * @param correctRow The winning row to be checked against
+	 */
+	public void prepareForSort(ArrayList<Integer> correctRow){
+		// makes the row save how many points it has and save whether it's a winner or not.
+		countCorrectNumbers(correctRow);
+	}
+	
 	public ArrayList<Integer> getRowNumbers(){
 		return rowNumbers;
 	}
@@ -30,12 +44,13 @@ public class TicketRow implements Comparable<TicketRow>{
 	public boolean isWinner(){
 		return isWinner;
 	}
-	public boolean isWinningRow(ArrayList<Integer> correctRow){
-		return rowNumbers.equals(correctRow);
-	}
 	
 	/**
 	 * Given a winning row, this returns the number of correct guesses in this row
+	 * <p>
+	 * Before this, or countCorrectNumbers(), is called, it's NOT safe to assume isWinner() and getPoints() 
+	 * will return correct results
+	 * 
 	 * @param correctRow
 	 * @return
 	 */
@@ -78,8 +93,5 @@ public class TicketRow implements Comparable<TicketRow>{
 		// and vice versa  - look up the interface Comparable
 		return row.getPoints() - this.points;
 	}
-
-	
-	
 	
 }
