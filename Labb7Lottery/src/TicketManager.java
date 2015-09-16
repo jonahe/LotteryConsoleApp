@@ -222,10 +222,11 @@ public class TicketManager {
 	 * @return
 	 */
 	public String getFormattedResults(boolean forAllTickets){
+		// get the sorted array of rows
 		ArrayList<TicketRow> sortedTicketRows = sortTicketRowsByPoints(forAllTickets);
 		StringBuilder sb = new StringBuilder("The lottery results for winning row " + winningRow + " are:\n");
 		
-		//TODO: fix spacing when user names are not equal length
+		//TODO: Make option to ignore 0 point results
 		String ownerName;
 		int points;
 		String winner = "";
