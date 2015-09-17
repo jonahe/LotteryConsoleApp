@@ -219,9 +219,10 @@ public class TicketManager {
 	/**
 	 * Triggers all needed for calculating results and returns it as a String
 	 * @param forAllTickets
+	 * @param skip0pointRows show/not show rows with 0 points
 	 * @return
 	 */
-	public String getFormattedResults(boolean forAllTickets){
+	public String getFormattedResults(boolean forAllTickets, boolean skip0pointRows){
 		// get the sorted array of rows
 		ArrayList<TicketRow> sortedTicketRows = sortTicketRowsByPoints(forAllTickets);
 		StringBuilder sb = new StringBuilder("The lottery results for winning row " + winningRow + " are:\n");
@@ -236,9 +237,17 @@ public class TicketManager {
 			ownerName = addSpacingToString(ownerName);
 			points = row.getPoints();
 			winner = row.isWinner() ? "WINNER" : "no win";
-			sb.append(ownerName + " - " + winner + " : "+ points + " points for row " + row.getRowNumbers());
-			sb.append("\n");
+			if(!(skip0pointRows && points == 0)){
+				sb.append(ownerName + " - " + winner + " : "+ points + " points for row " + row.getRowNumbers());
+				sb.append("\n");				
+			} else {
+				// skip appending all the 0 points. - this works since the list is sorted ascending, so when first 0 point it reached
+				// we know all after will also be 0
+				break;
+			}
 		}
+		
+		
 		
 		String formattedResults = sb.toString();
 		// String may be too long to show in console. Save it to file too.

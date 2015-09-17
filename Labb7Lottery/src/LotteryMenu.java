@@ -22,15 +22,17 @@ public class LotteryMenu {
 		String mainMessage = "\nWhat do you want to do?\n"
 				+ "1) Create a new lottery ticket\n"
 				+ "2) Choose an existing ticket to work with\n"
-				+ "3) Check ALL existing tickets for winning numbers\n"
-				+ "4) Generate new winning row (Keeping the any existing tickets)\n"
+				+ "3) Check ALL existing tickets for winning numbers excluding rows with 0 points (Recommended)\n"
+				+ "4) Check ALL existing tickets for winning numbers\n"
+				+ "5) Generate new winning row (Keeping the any existing tickets)\n"
 				+ "99) Leave lottery";
 		int choice = QUIT_Int;
 		// options
 		int createNewTicket = 1;
 		int chooseExistingTicket = 2;
-		int checkAllForWinning = 3;
-		int generateNewWinningRow = 4;
+		int checkAllForWinningExcluding0PointRows = 3;
+		int checkAllForWinning = 4;
+		int generateNewWinningRow = 5;
 		
 		do{
 			choice = askForAndGetNextInt(mainMessage, 1, 2, 3, 4, QUIT_Int);
@@ -45,15 +47,26 @@ public class LotteryMenu {
 					chooseTicketToWorkWith();					
 				}
 			} 
+			else if(choice == checkAllForWinningExcluding0PointRows){
+				if(ticketManager.getTickets().size() == 0){
+					System.out.println("There are no tickets to check! Create at least one first!");
+				} else {
+					boolean forAllTickets = true;
+					boolean excluding0PointTickets = true;
+					System.out.println(ticketManager.getFormattedResults(forAllTickets, excluding0PointTickets));
+					System.out.println("If results are too big for console, check project folder lotteryResults.txt");
+				}
+			} 
 			else if(choice == checkAllForWinning){
 				if(ticketManager.getTickets().size() == 0){
 					System.out.println("There are no tickets to check! Create at least one first!");
 				} else {
 					boolean forAllTickets = true;
-					System.out.println(ticketManager.getFormattedResults(forAllTickets));
+					boolean excluding0PointTickets = false;
+					System.out.println(ticketManager.getFormattedResults(forAllTickets, excluding0PointTickets));
 					System.out.println("If results are too big for console, check project folder lotteryResults.txt");
 				}
-			} 
+			}
 			else if(choice == generateNewWinningRow){
 				ticketManager.generateWinningRow();
 				System.out.println("New winning row generated!");
@@ -190,7 +203,7 @@ public class LotteryMenu {
 				break;
 			} else if(choice == getResult){
 				boolean forAllTickets = false; // we only want for the current ticket
-				System.out.println(ticketManager.getFormattedResults(forAllTickets));
+				System.out.println(ticketManager.getFormattedResults(forAllTickets, true));
 			}
 			
 		} while (choice != QUIT_Int);
