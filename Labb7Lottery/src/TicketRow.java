@@ -14,8 +14,6 @@ public class TicketRow implements Comparable<TicketRow>{
 		this.points = 0;
 	}
 	
-	//TODO: clean up.   make way to check if the row has been checked?
-	
 	/**
 	 * Makes row ready for presenting : update how many points the row gives and mark if it's a winner
 	 * <p>
