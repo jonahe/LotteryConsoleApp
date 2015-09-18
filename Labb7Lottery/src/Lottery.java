@@ -4,10 +4,11 @@ public class Lottery {
 	private String lotteryName;
 	private LotteryMenu menu;
 	
-	Lottery(String lotteryName, int highestAllowedNumber){
+	Lottery(String lotteryName, int highestAllowedNumber, int numbersPerRow){
 		this.lotteryName = lotteryName;
 		// This is where the magic happens
-		this.menu = new LotteryMenu(new TicketManager(highestAllowedNumber));
+		TicketManager ticketManager = new TicketManager(highestAllowedNumber, numbersPerRow);
+		this.menu = new LotteryMenu(ticketManager, numbersPerRow);
 	}
 	
 	public void startLottery(){

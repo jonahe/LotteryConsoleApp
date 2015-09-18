@@ -8,12 +8,15 @@ import java.util.Random;
 public class TicketManager {
 	
 	private final int HIGHEST_ALLOWED_ROW_NUMBER; // allowed numbers in row will be from 1 up to highestAllowedNumber
+	private final int NUMBERS_PER_ROW;
+	
 	private ArrayList<LotteryTicket> tickets;
 	private ArrayList<Integer> winningRow; // the right numbers
 	private LotteryTicket currentTicket;
 	
-	TicketManager(int highestAllowedRowNumber){
+	TicketManager(int highestAllowedRowNumber, int numbersPerRow){
 		this.HIGHEST_ALLOWED_ROW_NUMBER = highestAllowedRowNumber;
+		this.NUMBERS_PER_ROW = numbersPerRow;
 		this.tickets = new ArrayList<LotteryTicket>();
 		this.winningRow = new ArrayList<Integer>();
 		// random winning row
@@ -42,6 +45,9 @@ public class TicketManager {
 	 * Creates a row from the provided numbers and adds it to the current ticket
 	 */
 	public void createRow(ArrayList<Integer> rowNumbers){
+		// The row needs to know the ticket name, else when we gather all the rows
+		// to sort them after how many points they get, we have no idea who the row
+		// belongs to
 		String ownerName = currentTicket.getName();
 		TicketRow row = new TicketRow(rowNumbers, ownerName);
 		currentTicket.addRow(row);
@@ -55,7 +61,7 @@ public class TicketManager {
 		
 		Random randGen = new Random();
 		
-		for(int i = 0; i < 5; i++){
+		for(int i = 0; i < NUMBERS_PER_ROW; i++){
 			newRow.add(randGen.nextInt(HIGHEST_ALLOWED_ROW_NUMBER) + 1);
 		}
 		String ownerName = currentTicket.getName();
@@ -70,7 +76,7 @@ public class TicketManager {
 		winningRow.clear();
 		
 		Random randGen = new Random();
-		for(int i = 0; i < 5; i++){
+		for(int i = 0; i < NUMBERS_PER_ROW; i++){
 			winningRow.add(randGen.nextInt(HIGHEST_ALLOWED_ROW_NUMBER) + 1);
 		}
 	}
@@ -179,7 +185,7 @@ public class TicketManager {
 		
 		// before we can sort we must make all rows count points and see if they are winning or not
 		for(TicketRow row : ticketRows){
-			row.prepareForSort(winningRow);
+			row.prepareForSort(winningRow, NUMBERS_PER_ROW);
 		}
 		
 		// sort it using the implemented Comparable interface

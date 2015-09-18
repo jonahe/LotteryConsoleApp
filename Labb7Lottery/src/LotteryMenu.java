@@ -3,6 +3,8 @@ import java.util.Scanner;
 
 public class LotteryMenu {
 	
+	private final int NUMBERS_PER_ROW;
+	
 	private Scanner intScanner;
 	private Scanner strScanner;
 	private String goBackOption;
@@ -10,8 +12,9 @@ public class LotteryMenu {
 	private final int QUIT_Int = 99; // int value to go back in menu or exit
 	private TicketManager ticketManager;
 	
-	public LotteryMenu(TicketManager ticketManager){
+	public LotteryMenu(TicketManager ticketManager, int numbersPerRow){
 		this.ticketManager = ticketManager;
+		this.NUMBERS_PER_ROW = numbersPerRow;
 		this.intScanner = new Scanner(System.in);
 		this.strScanner = new Scanner(System.in);
 		this.goBackOption = "\n99) Go back one step"; // add this to each option message, to give user opt. to exit
@@ -24,7 +27,7 @@ public class LotteryMenu {
 				+ "2) Choose an existing ticket to work with\n"
 				+ "3) Check ALL existing tickets for winning numbers excluding rows with 0 points (Recommended)\n"
 				+ "4) Check ALL existing tickets for winning numbers\n"
-				+ "5) Generate new winning row (Keeping the any existing tickets)\n"
+				+ "5) Generate new winning row (Keeping any existing tickets)\n"
 				+ "99) Leave lottery";
 		int choice = QUIT_Int;
 		// options
@@ -35,7 +38,7 @@ public class LotteryMenu {
 		int generateNewWinningRow = 5;
 		
 		do{
-			choice = askForAndGetNextInt(mainMessage, 1, 2, 3, 4, QUIT_Int);
+			choice = askForAndGetNextInt(mainMessage, 1, 2, 3, 4, 5, QUIT_Int);
 			if(choice == createNewTicket){
 				createNewTicketMenu();
 			}
@@ -137,7 +140,7 @@ public class LotteryMenu {
 		}
 		String message = "Enter a number between 1 and " + highestAllowed;
 		ArrayList<Integer> rowNumbers = new ArrayList<Integer>();
-		for(int i = 0; i < 5; i++){
+		for(int i = 0; i < NUMBERS_PER_ROW; i++){
 			rowNumbers.add(askForAndGetNextInt(message, validOptions));
 		}
 		ticketManager.createRow(rowNumbers);

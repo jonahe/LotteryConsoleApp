@@ -22,10 +22,11 @@ public class TicketRow implements Comparable<TicketRow>{
 	 * will return correct results
 	 * <p>
 	 * @param correctRow The winning row to be checked against
+	 * @param pointsToWin ie. how many numbers per row? 
 	 */
-	public void prepareForSort(ArrayList<Integer> correctRow){
+	public void prepareForSort(ArrayList<Integer> correctRow, int pointsToWin){
 		// makes the row save how many points it has and save whether it's a winner or not.
-		countCorrectNumbers(correctRow);
+		countCorrectNumbers(correctRow, pointsToWin);
 	}
 	
 	public ArrayList<Integer> getRowNumbers(){
@@ -50,9 +51,10 @@ public class TicketRow implements Comparable<TicketRow>{
 	 * will return correct results
 	 * 
 	 * @param correctRow
+	 * @param pointsToWin ie. how many numbers per row? 
 	 * @return
 	 */
-	public int countCorrectNumbers(ArrayList<Integer> correctRow){
+	public int countCorrectNumbers(ArrayList<Integer> correctRow, int pointsToWin){
 		int count = 0;
 		for(int i = 0; i < correctRow.size(); i++){
 			// if values at same indexes DON'T match - just continue, else if they do: count++
@@ -63,7 +65,7 @@ public class TicketRow implements Comparable<TicketRow>{
 			}
 		}
 		// this row is a winner
-		if(count == 5){
+		if(count == pointsToWin){
 			isWinner = true;
 		}
 		// save the value for easy access later
