@@ -1,6 +1,8 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -231,8 +233,11 @@ public class TicketManager {
 	public String getFormattedResults(boolean forAllTickets, boolean skip0pointRows){
 		// get the sorted array of rows
 		ArrayList<TicketRow> sortedTicketRows = sortTicketRowsByPoints(forAllTickets);
-		StringBuilder sb = new StringBuilder("The lottery results for winning row " + winningRow + " are:\n");
 		
+		// start creation of result String
+		String probablityOfWinning = getCalculatedProbablity();
+		StringBuilder sb = new StringBuilder(probablityOfWinning);
+		sb.append("\nThe lottery results for winning row " + winningRow + " are:\n");
 		//TODO: Make option to ignore 0 point results
 		String ownerName;
 		int points;
@@ -286,6 +291,29 @@ public class TicketManager {
 			}
 		}
 		return length;
+	}
+	
+	/**
+	 * Returns a string of the form "A random row has 1 in x chance of being a winner" 
+	 * @return
+	 */
+	private String getCalculatedProbablity(){
+		BigDecimal highestAllowedNumber = new BigDecimal(HIGHEST_ALLOWED_ROW_NUMBER);
+		
+		BigDecimal oddsOfAnyParticularNumberBeingRight = BigDecimal.valueOf(1).divide(highestAllowedNumber);
+		// odds of winning =  oddsOfAnyParticularNumberBeingRight^numbersPerRow
+		BigDecimal oddsOfWinning = oddsOfAnyParticularNumberBeingRight.pow(NUMBERS_PER_ROW);
+		
+		// Express probability as 1 in x      ->      1 /  x   =  oddsOfWinning 
+		// solving for x  we get      1 = oddsOfWinning * x 
+		// divide both sides with odds of winning        1 / oddsOfWinning   =  x 
+		oddsOfWinning = BigDecimal.valueOf(1).divide(oddsOfWinning);
+		
+		// "round" to integer 
+		oddsOfWinning = oddsOfWinning.add(new BigDecimal(0.5));
+		int oneInX = oddsOfWinning.intValue();
+		
+		return "A random row has a 1 in " + oneInX + " chance of being a winner.";
 	}
 	
 	
